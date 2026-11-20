@@ -1,0 +1,143 @@
+# HEAL on UrbanIng-V2X (train: crossing1/2, validation: crossing1/2).
+# Shared Native prefix: epochs 1-11. See docs/training.md.
+# Seed 1669408686 (pass --seed 1669408686).
+name: heal_prefix
+root_dir: datasets/UrbanIng-V2X-OpenCOOD-format/splits/sis/sis_train_crossing1_crossing2_test_crossing3/train
+validate_dir: datasets/UrbanIng-V2X-OpenCOOD-format/splits/sis/sis_train_crossing1_crossing2_test_crossing3/val
+dataset_format: urbaning
+dataset_split: train
+yaml_parser: load_point_pillar_params
+train_params: {batch_size: 4, epoches: 11, eval_freq: 10, save_freq: 10, max_cav: 3, seed: 1669408686,
+  include_infrastructure: true, min_lidar_hits_per_object: 5, monitor_backbone_health: true}
+evaluation_seed: 1669408686
+wild_setting: {async: false, async_overhead: 100, backbone_delay: 0, data_size: 1.06, loc_err: false,
+  ryp_std: 0.2, seed: 20, transmission_speed: 27, xyz_std: 0.2}
+fusion:
+  core_method: LidarIntermediateFusionDataset
+  args: {proj_first: false, correct_augmented_transforms: true, pack_active_agents: true}
+preprocess:
+  core_method: SpVoxelPreprocessor
+  cav_lidar_range: &cav_lidar_range [-102.4, -40.0, -5.0, 102.4, 40.0, 5.0]
+  cav_lidar_range_validation: [-100.0, -40.0, -5.0, 100.0, 40.0, 5.0]
+  voxel_size: &voxel_size [0.4, 0.4, 10.0]
+  num_class: 4
+  anchor_generator_config: &anchor_generator_config
+  - class_name: Vehicle
+    includes_classes: [Car, Van]
+    anchor_sizes:
+    - [4.0, 1.75, 1.6]
+    anchor_rotations: [0, 1.57]
+    anchor_bottom_heights: [-1.78]
+    feature_map_stride: 2
+    matched_threshold: 0.6
+    unmatched_threshold: 0.45
+    align_center: true
+  - class_name: Heavy_Vehicle
+    includes_classes: [Truck, Bus, Trailer, OtherVehicle]
+    anchor_sizes:
+    - [6.0, 2.5, 2.5]
+    anchor_rotations: [0, 1.57]
+    anchor_bottom_heights: [-1.78]
+    feature_map_stride: 2
+    matched_threshold: 0.6
+    unmatched_threshold: 0.45
+    align_center: true
+  - class_name: 2Wheeler
+    includes_classes: [Cyclist, Motorcycle, E-Scooter]
+    anchor_sizes:
+    - [2.0, 1.0, 1.5]
+    anchor_rotations: [0, 1.57]
+    anchor_bottom_heights: [-0.6]
+    feature_map_stride: 2
+    matched_threshold: 0.6
+    unmatched_threshold: 0.45
+    align_center: true
+  - class_name: Pedestrian
+    includes_classes: [Pedestrian, OtherPedestrian]
+    anchor_sizes:
+    - [0.8, 0.8, 1.8]
+    anchor_rotations: [0, 1.57]
+    anchor_bottom_heights: [-0.6]
+    feature_map_stride: 2
+    matched_threshold: 0.6
+    unmatched_threshold: 0.45
+    align_center: true
+  args:
+    voxel_size: *voxel_size
+    max_points_per_voxel: 32
+    max_voxel_train: 32000
+    max_voxel_test: 70000
+data_augment:
+- NAME: random_world_flip
+  ALONG_AXIS_LIST: [x]
+- NAME: random_world_rotation
+  WORLD_ROT_ANGLE: [-0.78539816, 0.78539816]
+- NAME: random_world_scaling
+  WORLD_SCALE_RANGE: [0.95, 1.05]
+postprocess:
+  core_method: VoxelPostprocessor
+  cav_lidar_range: *cav_lidar_range
+  anchor_args:
+    cav_lidar_range: *cav_lidar_range
+    anchor_generator_config: *anchor_generator_config
+    num: 2
+    feature_stride: 2
+  target_args: {score_threshold: 0.2}
+  order: hwl
+  max_num: 150
+  nms_thresh: 0.15
+model:
+  core_method: lidar.point_pillar_heal
+  args:
+    lidar_range: [-102.4, -40.0, -5.0, 102.4, 40.0, 5.0]
+    voxel_size: [0.4, 0.4, 10.0]
+    max_cav: 3
+    num_class: 4
+    anchor_number: 2
+    anchor_num: 2
+    compression: 0
+    backbone_fix: false
+    supervise_single: true
+    pillar_vfe:
+      use_norm: true
+      with_distance: false
+      use_absolute_xyz: true
+      num_filters: [64]
+    point_pillar_scatter: {num_features: 64}
+    base_bev_backbone:
+      layer_nums: [3]
+      layer_strides: [2]
+      num_filters: [64]
+    fusion_backbone:
+      resnext: true
+      groups: 32
+      width_per_group: 4
+      layer_nums: [3, 5, 8]
+      layer_strides: [1, 2, 2]
+      num_filters: [64, 128, 256]
+      upsample_strides: [1, 2, 4]
+      num_upsample_filter: [128, 128, 128]
+      align_corners: false
+    fusion_downsample_rate: 2
+    in_head: 256
+    geometry_scaffold: {enabled: false, hidden_channels: 128, roi_size: 7, mask_size: 28}
+loss:
+  core_method: point_pillar_heal_loss
+  args:
+    num_class: 4
+    cls_weight: 1.0
+    reg: 2.0
+    pyramid:
+      relative_downsample: [1, 2, 4]
+      weight: [0.4, 0.2, 0.1]
+      pos_cls_weight: 2.0
+    geometry_scaffold: {weight: 0.0}
+optimizer:
+  core_method: Adam
+  lr: 0.002
+  args: {eps: 1.0e-10, weight_decay: 0.0001}
+lr_scheduler:
+  core_method: multistep
+  gamma: 0.1
+  step_size: [15, 25]
+  epoches: 30

@@ -1,0 +1,20 @@
+# Data, checkpoints, and training outputs stay outside version control.
+# Patterns are anchored to the repository root; opencood/data_utils/datasets/ is source code.
+/datasets/
+/checkpoints/
+/runs/
+/opencood/logs/*
+!/opencood/logs/.gitkeep
+*.pth
+
+# Build products of the Cython extension and Python caches
+/build/
+*.so
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Editors and notebooks
+.vscode/
+.idea/
+.ipynb_checkpoints/

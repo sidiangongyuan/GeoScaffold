@@ -1,0 +1,17 @@
+name: geoscaffold
+channels:
+  - defaults
+dependencies:
+  - pip==21.1.2
+  - python==3.9
+  - pip:
+    - matplotlib~=3.4.2
+    - numpy==1.21.6
+    - open3d==0.17.0
+    - opencv-python==4.5.5.62
+    - cython==3.1.0
+    - pygame
+    - tensorboardX
+    - shapely==2.0.0
+    - einops
+    - timm
