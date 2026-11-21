@@ -1,13 +1,13 @@
 # GeoScaffold: From Latent to Realized Geometry in Collaborative Detection
 
-> **TL;DR:** GeoScaffold is a training-only auxiliary loss for collaborative 3D detectors. At each positive anchor, it predicts which cells of a grid over the anchor lie inside the ground-truth box, and this dense supervision trains the detector toward better-localized boxes. The head is removed at inference, so each detector keeps its architecture, communication, and inference cost. <!-- begin:headline -->Across 11 fusion methods on the UrbanIng-V2X validation split, it raises AP@0.5 by 0.98 and AP@0.7 by 0.55 points on average.<!-- end:headline -->
+> **TL;DR:** GeoScaffold is a training-only auxiliary loss for collaborative 3D detectors. At each positive anchor, it predicts which cells of a grid over the anchor lie inside the ground-truth box, and this dense supervision trains the detector toward better-localized boxes. The head is removed at inference, so each detector keeps its architecture, communication, and inference cost. <!-- begin:headline -->Across 11 fusion methods on the UrbanIng-V2X validation split, GeoScaffold raises AP@0.5 by 0.98 and AP@0.7 by 0.55 points on average.<!-- end:headline -->
 
 <p align="center">
   <img src="figures/teaser.png" alt="GeoScaffold teaser: NMS often discards the better-localized collaborative box; GeoScaffold improves the box at the top-scored anchor" width="100%">
 </p>
 
 <p align="center">
-  <b>Paper:</b> arXiv (coming soon) &nbsp;&middot;&nbsp; <b>Model weights:</b> Hugging Face (coming soon)
+  <b>Paper:</b> arXiv (coming soon) &nbsp;&middot;&nbsp; <b>Model weights:</b> <a href="https://huggingface.co/sidiangongyuan/GeoScaffold">Hugging Face</a>
 </p>
 
 <p align="center">
@@ -17,7 +17,7 @@
 
 ## News
 
-- **[2026-11]** Code, configs, and training recipes for the UrbanIng-V2X benchmark are released. Checkpoints and the arXiv link will follow.
+- **[2026-11]** Code, configs, training recipes, and [checkpoints](https://huggingface.co/sidiangongyuan/GeoScaffold) for the UrbanIng-V2X benchmark are released. The arXiv link will follow.
 
 ## Contents
 
@@ -117,7 +117,14 @@ ln -s /path/to/converted/data datasets/UrbanIng-V2X-OpenCOOD-format
 
 ## Checkpoints
 
-The 25 checkpoints of the results table (both arms of the 11 fusion methods, plus Ego-only, Early Fusion, and Late Fusion) will be released on Hugging Face. They unpack at the repository root:
+The 25 checkpoints of the results table (both arms of the 11 fusion methods, plus Ego-only, Early Fusion, and Late Fusion) are on [Hugging Face](https://huggingface.co/sidiangongyuan/GeoScaffold). Download them into the repository root with the `hf` command of `huggingface_hub`:
+
+```bash
+python -m pip install -U huggingface_hub
+hf download sidiangongyuan/GeoScaffold --local-dir . --include "checkpoints/*"
+```
+
+The download creates this layout:
 
 ```
 checkpoints/urbaning/<method>/<native|geoscaffold>/config.yaml

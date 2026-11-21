@@ -6,6 +6,8 @@
 /opencood/logs/*
 !/opencood/logs/.gitkeep
 *.pth
+# Download metadata that `hf download --local-dir .` keeps next to the checkpoints
+/.cache/
 
 # Build products of the Cython extension and Python caches
 /build/

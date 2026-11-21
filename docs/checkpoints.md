@@ -1,6 +1,12 @@
 # Checkpoints
 
-The checkpoints will be released on Hugging Face (link coming soon). Each folder under `checkpoints/urbaning/` holds the final checkpoint of one run and the config of that run; pass the folder to `--model_dir` to evaluate it. The AP values are those of the results table: UrbanIng-V2X validation split (crossing1/2), in percent.
+The checkpoints are on Hugging Face at [sidiangongyuan/GeoScaffold](https://huggingface.co/sidiangongyuan/GeoScaffold). From the repository root, this command downloads them to `checkpoints/urbaning/`:
+
+```bash
+hf download sidiangongyuan/GeoScaffold --local-dir . --include "checkpoints/*"
+```
+
+Each folder under `checkpoints/urbaning/` holds the final checkpoint of one run and the config of that run; pass the folder to `--model_dir` to evaluate it. The AP values are those of the results table: UrbanIng-V2X validation split (crossing1/2), in percent.
 
 <!-- begin:checkpoints -->
 
