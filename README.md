@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <b>Paper:</b> arXiv (coming soon) &nbsp;&middot;&nbsp; <b>Model weights:</b> <a href="https://huggingface.co/sidiangongyuan/GeoScaffold">Hugging Face</a>
+  <b>Paper:</b> <a href="https://arxiv.org/abs/2611.27667">arXiv</a> &nbsp;&middot;&nbsp; <b>Model weights:</b> <a href="https://huggingface.co/sidiangongyuan/GeoScaffold">Hugging Face</a>
 </p>
 
 <p align="center">
@@ -17,7 +17,7 @@
 
 ## News
 
-- **[2026-11]** Code, configs, training recipes, and [checkpoints](https://huggingface.co/sidiangongyuan/GeoScaffold) for the UrbanIng-V2X benchmark are released. The arXiv link will follow.
+- **[2026-11]** The paper is on [arXiv](https://arxiv.org/abs/2611.27667). Code, configs, training recipes, and [checkpoints](https://huggingface.co/sidiangongyuan/GeoScaffold) for the UrbanIng-V2X benchmark are released.
 
 ## Contents
 
@@ -193,4 +193,15 @@ This repository builds on [OpenCOOD](https://github.com/DerrickXuNu/OpenCOOD) an
 
 ## Citation
 
-The BibTeX entry will be added with the arXiv version.
+<!-- begin:citation -->
+
+```bibtex
+@article{yang2026geoscaffold,
+  title   = {{GeoScaffold}: From Latent to Realized Geometry in Collaborative Detection},
+  author  = {Yang, Kang and Fang, Yance and Cui, Gaochen and Jin, Xiaoqiang and Li, Deying and Wang, Yongcai},
+  journal = {arXiv preprint arXiv:2611.27667},
+  year    = {2026}
+}
+```
+
+<!-- end:citation -->
